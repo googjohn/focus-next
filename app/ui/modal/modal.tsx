@@ -1,9 +1,14 @@
+import { useReducer } from "react"
 import { cn } from "@/app/lib/utility"
 import { inter } from "../fonts"
+import { localUserSettings } from "@/app/lib/constants"
+import { userSettingsReducer } from "@/app/lib/reducers"
 import { ModalProps } from "@/app/lib/definitions"
 import ModalHeader from "./ModalHeader"
 import ModalBody from "./ModalBody"
 import Button from "../button"
+
+
 
 export default function Modal({
     modalProp,
@@ -12,7 +17,15 @@ export default function Modal({
 }: ModalProps) {
 
     const { isModalOpen, handleModalOpen } = modalProp
-    const { settings, handleChangeSettings, handleSaveSettings } = settingsProp
+    const { settings, handleChangeSettings, saveSettings } = settingsProp
+    const [localState, dispatch] = useReducer(userSettingsReducer, localUserSettings)
+
+    const handleSaveSettings = () => {
+        handleChangeSettings(localState)
+        saveSettings(settings)
+        alert('New settings saved.')
+        handleModalOpen()
+    }
 
     return (
         <>
@@ -28,8 +41,8 @@ export default function Modal({
                     <div className="modal-header w-full">
                         <ModalHeader handleModalOpen={handleModalOpen} />
                         <ModalBody
-                            settings={settings}
-                            handleChangeSettings={handleChangeSettings}
+                            localState={localState}
+                            dispatch={dispatch}
                         />
                         <Button
                             className={cn(

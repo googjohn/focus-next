@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
-import { cn } from "./lib/utility";
+import { cn, saveSettings } from "./lib/utility";
 import { inter } from "./ui/fonts";
 import { FaPause, FaPlay } from "react-icons/fa6";
-import {
-    ChangeEvent,
-    TimerStatus,
-    SelectedMode,
-    TimerSettings,
-} from "./lib/definitions";
+import { bgClasses } from "./lib/constants";
+import { useCountDown } from "./lib/countdown";
 
 import Button from "./ui/button";
 import Header from "@/app/ui/header/header";
@@ -19,41 +15,25 @@ import Indicator from "@/app/ui/border-indicator";
 import Modes from "@/app/ui/body/modes";
 import TimerDisplay from "@/app/ui/body/timer";
 import Modal from "./ui/modal/modal";
-import { useCountDown } from "./lib/countdown";
-import { bgClasses } from "./lib/constants";
 
 export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [selectedMode, setSelectedMode] = useState<SelectedMode>('focus')
 
     const {
+        play,
+        stop,
+        timeLeft,
         settings,
         timerStatus,
-        currentDuration,
-        clearTick,
-        handlePlay,
-        handleStop,
-        getSavedSettings,
-        handleSaveSettings,
+        selectedMode,
+        handleSelectedMode,
         handleChangeSettings,
-    } = useCountDown(selectedMode)
+    } = useCountDown()
 
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen)
     }
 
-    const handleSelectedMode = (mod: SelectedMode) => {
-        if (!mod || mod === selectedMode) return;
-        setSelectedMode(mod)
-        handleStop()
-    }
-
-    useEffect(() => {
-        getSavedSettings()
-    }, [])
-
-    console.log(settings)
-    console.log('this is current duration', currentDuration)
     return (
         <div className={cn(
             "flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
@@ -68,7 +48,7 @@ export default function Page() {
                         handleSelectedMode={handleSelectedMode}
                     />
 
-                    <TimerDisplay duration={currentDuration} />
+                    <TimerDisplay duration={timeLeft} />
 
                     <Button
                         className={cn(
@@ -79,7 +59,7 @@ export default function Page() {
                                 "text-long": selectedMode === 'long',
                             }
                         )}
-                        onClick={timerStatus === 'running' ? handleStop : handlePlay}
+                        onClick={timerStatus === 'running' ? stop : play}
                     >
                         <span className="text-2xl">
                             {timerStatus === 'running' ? 'PAUSE' : 'START'}
@@ -89,7 +69,7 @@ export default function Page() {
                 </Body>
                 <Modal
                     modalProp={{ isModalOpen, handleModalOpen }}
-                    settingsProp={{ settings, handleChangeSettings, handleSaveSettings }}
+                    settingsProp={{ settings, handleChangeSettings, saveSettings }}
                     selectedMode={selectedMode}
                 />
             </main>

@@ -6,7 +6,13 @@ import {
 } from "react";
 
 // type for timer status
-export type TimerStatus = "running" | "stopped";
+export type TimerStatus = "paused" | "finished" | "running" | "stopped";
+
+// timer state:: used by countdown
+export interface TimerState {
+    timerStatus: TimerStatus,
+    timeLeft: number
+}
 
 // type for current mode selected
 export type SelectedMode = "focus" | "short" | "long";
@@ -30,7 +36,7 @@ export type SelectedModeState = {
 }
 
 // default timer settings
-export type TimerSettings = {
+export interface TimerSettings {
     focus: number,
     short: number,
     long: number,
@@ -40,8 +46,8 @@ export type TimerSettings = {
 
 export type SettingsState = {
     settings: TimerSettings;
-    handleChangeSettings: (e: ChangeEvent) => void;
-    handleSaveSettings?: () => void;
+    handleChangeSettings: (localState: Omit<TimerSettings, 'sessions'>) => void;
+    saveSettings: (settings: TimerSettings) => void;
 }
 
 export type ModalProps = {
@@ -55,7 +61,29 @@ export type TimerProps = {
     timerStatus: TimerStatus
 }
 
+/* timer types for reducer */
+export type TimerActions =
+    | { type: "SET_STATUS", payload: { status: TimerStatus } }
+    | { type: "FINISHED" }
+    | { type: "TICKING" }
+    | { type: "UPDATE_TIME", payload: { duration: number } }
 
+/* payload, modal local state, props reducer types */
+export interface SettingsPayloadAction {
+    id: string;
+    value: string;
+}
+export type SettingsPayloadActionType = {
+    type: "input_change";
+    payload: SettingsPayloadAction;
+}
+
+export interface ModalDispatch {
+    localState: Omit<TimerSettings, "sessions">;
+    dispatch: Dispatch<SettingsPayloadActionType>;
+}
+
+/* events type */
 export type MouseEvent = React.MouseEvent<HTMLButtonElement>
 
 export type ChangeEvent = React.ChangeEvent<HTMLInputElement>

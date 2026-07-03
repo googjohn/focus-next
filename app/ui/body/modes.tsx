@@ -15,7 +15,7 @@ export default function Modes({ selectedMode, handleSelectedMode }: SelectedMode
                         "px-3 py-2 rounded-lg bg-white/20",
                         mode === selectedMode && `${bgClasses[selectedMode]} font-semibold`
                     )}
-                    data-mode={mode}
+                    // data-mode={mode}
                     onClick={() => handleSelectedMode(mode)}
                 >
                     {mode === 'focus' ? 'Focus On' : mode === 'short' ? 'Short Break' : 'Long Break'}

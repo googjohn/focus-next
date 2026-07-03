@@ -1,7 +1,18 @@
 import { cn } from "@/app/lib/utility";
-import { SettingsState } from "@/app/lib/definitions";
+import { ChangeEvent, ModalDispatch } from "@/app/lib/definitions";
 
-export default function ModalBody({ settings, handleChangeSettings }: SettingsState) {
+export default function ModalBody({ localState, dispatch }: ModalDispatch) {
+
+    const handleChangeSettings = (e: ChangeEvent) => {
+        dispatch({
+            type: "input_change",
+            payload: {
+                id: e.currentTarget.id,
+                value: e.currentTarget.value,
+            }
+        })
+    };
+
     return (
         <>
             <div className="modal-body-container w-full p-5">
@@ -19,7 +30,7 @@ export default function ModalBody({ settings, handleChangeSettings }: SettingsSt
                                 )}
                                 type="number"
                                 id="focus"
-                                value={settings.focus}
+                                value={localState.focus}
                                 placeholder="25"
                                 onChange={handleChangeSettings}
                             />
@@ -35,7 +46,7 @@ export default function ModalBody({ settings, handleChangeSettings }: SettingsSt
                                 )}
                                 type="number"
                                 id="short"
-                                value={settings.short}
+                                value={localState.short}
                                 placeholder="5"
                                 onChange={handleChangeSettings}
                             />
@@ -51,7 +62,7 @@ export default function ModalBody({ settings, handleChangeSettings }: SettingsSt
                                 )}
                                 type="number"
                                 id="long"
-                                value={settings.long}
+                                value={localState.long}
                                 placeholder="15"
                                 onChange={handleChangeSettings}
                             />
@@ -71,7 +82,7 @@ export default function ModalBody({ settings, handleChangeSettings }: SettingsSt
                             )}
                             type="number"
                             id="interval"
-                            value={settings.interval}
+                            value={localState.interval}
                             placeholder="4"
                             onChange={handleChangeSettings}
                         />
