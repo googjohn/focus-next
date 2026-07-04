@@ -16,6 +16,7 @@ import {
     initializeReducerState,
 } from "./utility";
 import { useAlarm } from "./alarm";
+import { useNotifications } from "./notifications";
 
 export const useCountDown = () => {
     const [settings, setSettings] = useState(MODE_CONFIG);
@@ -32,6 +33,7 @@ export const useCountDown = () => {
 
     const { timeLeft, timerStatus, sessions } = timerState;
     const { playAlarm, stopAlarm } = useAlarm()
+    const { showNotif, requestNotif } = useNotifications();
 
     useEffect(() => {
         const storedSettings = getUserSettings(MODE_CONFIG)
@@ -61,6 +63,7 @@ export const useCountDown = () => {
 
     const play = () => {
         dispatch({ type: "SET_STATUS", payload: { status: 'running' } })
+        requestNotif();
     }
 
     const stop = () => {
@@ -124,6 +127,7 @@ export const useCountDown = () => {
         if (timerStatus !== 'running' || timeLeft > 0) return;
 
         playAlarm();
+        showNotif(selectedMode, sessions, settings.interval)
         dispatch({ type: "FINISHED" })
 
         autoSwitchTimeoutRef.current = setTimeout(() => {
