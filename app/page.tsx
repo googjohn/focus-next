@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { cn, saveSettings } from "./lib/utility";
+import { cn } from "./lib/utility";
 import { inter } from "./ui/fonts";
 import { FaPause, FaPlay } from "react-icons/fa6";
 import { bgClasses } from "./lib/constants";
@@ -24,6 +24,8 @@ export default function Page() {
         stop,
         timeLeft,
         settings,
+        sessions,
+        duration,
         timerStatus,
         selectedMode,
         handleSelectedMode,
@@ -39,9 +41,15 @@ export default function Page() {
             "flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
             bgClasses[selectedMode]
         )}>
-            <main className="flex flex-1 w-full max-w-2xl flex-col items-center ">
+            <main className="flex flex-1 w-full max-w-2xl flex-col items-center relative">
                 <Header handleModalOpen={handleModalOpen} />
-                <Indicator />
+                <Indicator
+                    timeLeft={timeLeft}
+                    duration={duration}
+                    sessions={sessions}
+                    interval={settings.interval}
+                    selectedMode={selectedMode}
+                />
                 <Body>
                     <Modes
                         selectedMode={selectedMode}
@@ -69,7 +77,7 @@ export default function Page() {
                 </Body>
                 <Modal
                     modalProp={{ isModalOpen, handleModalOpen }}
-                    settingsProp={{ settings, handleChangeSettings, saveSettings }}
+                    settingsProp={{ settings, handleChangeSettings }}
                     selectedMode={selectedMode}
                 />
             </main>

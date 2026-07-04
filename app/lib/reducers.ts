@@ -34,6 +34,12 @@ export function timerReducer(
                 timeLeft: action.payload.duration
             }
         }
+        case "UPDATE_SESSIONS": {
+            return {
+                ...state,
+                sessions: state.sessions + 1
+            }
+        }
         default:
             return state;
     }

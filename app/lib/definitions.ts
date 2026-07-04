@@ -10,8 +10,9 @@ export type TimerStatus = "paused" | "finished" | "running" | "stopped";
 
 // timer state:: used by countdown
 export interface TimerState {
-    timerStatus: TimerStatus,
-    timeLeft: number
+    timerStatus: TimerStatus;
+    timeLeft: number;
+    sessions: number;
 }
 
 // type for current mode selected
@@ -40,14 +41,12 @@ export interface TimerSettings {
     focus: number,
     short: number,
     long: number,
-    sessions: number,
     interval: number,
 }
 
 export type SettingsState = {
     settings: TimerSettings;
-    handleChangeSettings: (localState: Omit<TimerSettings, 'sessions'>) => void;
-    saveSettings: (settings: TimerSettings) => void;
+    handleChangeSettings: (localState: TimerSettings) => void;
 }
 
 export type ModalProps = {
@@ -67,6 +66,7 @@ export type TimerActions =
     | { type: "FINISHED" }
     | { type: "TICKING" }
     | { type: "UPDATE_TIME", payload: { duration: number } }
+    | { type: "UPDATE_SESSIONS" }
 
 /* payload, modal local state, props reducer types */
 export interface SettingsPayloadAction {
@@ -79,7 +79,7 @@ export type SettingsPayloadActionType = {
 }
 
 export interface ModalDispatch {
-    localState: Omit<TimerSettings, "sessions">;
+    localState: TimerSettings;
     dispatch: Dispatch<SettingsPayloadActionType>;
 }
 

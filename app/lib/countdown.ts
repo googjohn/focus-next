@@ -1,42 +1,49 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 
-import {
-    IntervalRefType,
-    SelectedMode,
-    TimeoutRefType,
-    TimerSettings,
-    TimerStatus
-} from "./definitions";
 import { MODE_CONFIG } from "./constants";
 import { timerReducer } from "./reducers";
-import { getUserSettings, initializeReducerState } from "./utility";
+import {
+    SelectedMode,
+    TimerSettings,
+    TimeoutRefType,
+    IntervalRefType,
+} from "./definitions";
+import {
+    saveSettings,
+    getUserSettings,
+    initializeReducerState,
+} from "./utility";
+import { useAlarm } from "./alarm";
 
 export const useCountDown = () => {
     const [settings, setSettings] = useState(MODE_CONFIG);
-
     const [selectedMode, setSelectedMode] = useState<SelectedMode>('focus')
 
-    useEffect(() => {
-        setSettings(getUserSettings(MODE_CONFIG))
-    }, [])
+    const derivedDuration = settings[selectedMode] * 60;
 
-    const derivedDuration = settings[selectedMode];
-
-    const [timerState, dispatch] = useReducer(timerReducer, derivedDuration, initializeReducerState)
-
-    console.log('this is derived duration ', derivedDuration)
+    console.log('this is derived duration ', derivedDuration);
+    const [timerState, dispatch] = useReducer(timerReducer, derivedDuration, initializeReducerState);
 
     const intervalRef = useRef<IntervalRefType>(null);
     const autoPlayTimeoutRef = useRef<TimeoutRefType>(null);
     const autoSwitchTimeoutRef = useRef<TimeoutRefType>(null);
 
-
-    const { timeLeft, timerStatus } = timerState;
+    const { timeLeft, timerStatus, sessions } = timerState;
+    const { playAlarm, stopAlarm } = useAlarm()
 
     useEffect(() => {
-        dispatch({ type: "UPDATE_TIME", payload: { duration: Math.max(0, derivedDuration * 60) } })
+        const storedSettings = getUserSettings(MODE_CONFIG)
+        setSettings(storedSettings)
+    }, [])
+
+    useEffect(() => {
+        saveSettings(settings)
+    }, [settings])
+
+    useEffect(() => {
+        dispatch({ type: "UPDATE_TIME", payload: { duration: Math.max(0, derivedDuration) } })
     }, [derivedDuration])
 
     const handleSelectedMode = (mod: SelectedMode) => {
@@ -57,12 +64,16 @@ export const useCountDown = () => {
     }
 
     const stop = () => {
-        if (autoPlayTimeoutRef.current && autoSwitchTimeoutRef.current) {
+        if (autoPlayTimeoutRef.current) {
             clearTimeout(autoPlayTimeoutRef.current)
+            autoPlayTimeoutRef.current = null
+        }
+
+        if (autoSwitchTimeoutRef.current) {
             clearTimeout(autoSwitchTimeoutRef.current)
+            autoSwitchTimeoutRef.current = null
         }
         dispatch({ type: "SET_STATUS", payload: { status: 'stopped' } })
-        // clearTick()
     }
 
     const pause = () => {
@@ -72,20 +83,14 @@ export const useCountDown = () => {
 
     const switchMode = (mode: SelectedMode) => {
         if (mode === 'focus') {
-            setSettings(prev => {
-                const nextSession = prev.sessions + 1
-                const nextMode = nextSession % prev.interval === 0 ? "long" : "short"
-                setSelectedMode(nextMode)
-
-                return {
-                    ...prev,
-                    sessions: nextSession,
-                }
-            })
+            const nextSession = sessions + 1
+            const nextMode = nextSession % settings.interval === 0 ? "long" : "short"
+            setSelectedMode(nextMode)
+            dispatch({ type: 'UPDATE_SESSIONS' })
             return;
         }
 
-        setSelectedMode('focus')
+        setSelectedMode('focus');
     }
 
     // handle input change
@@ -118,29 +123,32 @@ export const useCountDown = () => {
     useEffect(() => {
         if (timerStatus !== 'running' || timeLeft > 0) return;
 
-        // clearTick();
+        playAlarm();
         dispatch({ type: "FINISHED" })
 
         autoSwitchTimeoutRef.current = setTimeout(() => {
+            stopAlarm();
             switchMode(selectedMode);
-        }, 1000);
+        }, 1500);
 
         autoPlayTimeoutRef.current = setTimeout(() => {
             play();
-        }, 2000);
+        }, 2500);
 
     }, [timeLeft, timerStatus, selectedMode])
-    console.log(timeLeft, timerStatus)
+    console.log(timeLeft, timerStatus, sessions)
     console.log(settings)
     return {
         play,
         stop,
         timeLeft,
         settings,
+        sessions,
         switchMode,
         timerStatus,
         selectedMode,
         handleSelectedMode,
         handleChangeSettings,
+        duration: derivedDuration,
     }
 }

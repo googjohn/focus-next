@@ -21,25 +21,20 @@ export const formatTime = (duration: number) => {
     }
 }
 
-// initialize settings by passing this function to useState
+// initialize settings from default config or settings from local storage
 export const getUserSettings = (config: TimerSettings): TimerSettings => {
     try {
-        const userSettings = localStorage.getItem("userSettings");
-
-        if (!userSettings) {
-            console.log("No saved user settings.")
-            return config
+        // client side / browser
+        if (typeof window !== undefined) {
+            const userSettings = localStorage.getItem("userSettings");
+            return userSettings ? JSON.parse(userSettings) : config
         }
 
-        const parsedSettings = JSON.parse(userSettings)
-
-        return {
-            ...parsedSettings
-        }
-
-    } catch (error) {
-        console.error((error))
+        // server side
         return config
+    } catch (error) {
+        console.error(error)
+        return config;
     }
 }
 
@@ -47,29 +42,21 @@ export const getUserSettings = (config: TimerSettings): TimerSettings => {
 export const initializeReducerState = (duration: number): TimerState => {
     return {
         timerStatus: "stopped",
-        timeLeft: duration
+        timeLeft: duration,
+        sessions: 0,
     }
 }
 
 // handle save settings to localStorage
 export const saveSettings = (settings: TimerSettings) => {
-
-    const save = (setting: string) => localStorage.setItem("userSettings", setting)
-
     try {
-        const storedSettings = localStorage.getItem("userSettings");
-
-        if (!storedSettings) {
-            console.log("No saved user settings.")
-            save(JSON.stringify(settings))
-        } {
-            localStorage.clear()
-            save(JSON.stringify(settings))
+        const newUserSettings = JSON.stringify(settings)
+        if (typeof window !== undefined) {
+            localStorage.setItem("userSettings", newUserSettings)
             console.log("New user settings saved.")
         }
         return;
     } catch (error) {
         console.error((error))
     }
-
 }

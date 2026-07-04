@@ -1,7 +1,8 @@
-import { useReducer } from "react"
-import { cn } from "@/app/lib/utility"
+import { useEffect, useReducer } from "react"
+
 import { inter } from "../fonts"
-import { localUserSettings } from "@/app/lib/constants"
+import { cn } from "@/app/lib/utility"
+import { MODE_CONFIG } from "@/app/lib/constants"
 import { userSettingsReducer } from "@/app/lib/reducers"
 import { ModalProps } from "@/app/lib/definitions"
 import ModalHeader from "./ModalHeader"
@@ -17,12 +18,11 @@ export default function Modal({
 }: ModalProps) {
 
     const { isModalOpen, handleModalOpen } = modalProp
-    const { settings, handleChangeSettings, saveSettings } = settingsProp
-    const [localState, dispatch] = useReducer(userSettingsReducer, localUserSettings)
+    const { settings, handleChangeSettings } = settingsProp
+    const [localState, dispatch] = useReducer(userSettingsReducer, MODE_CONFIG)
 
     const handleSaveSettings = () => {
         handleChangeSettings(localState)
-        saveSettings(settings)
         alert('New settings saved.')
         handleModalOpen()
     }
