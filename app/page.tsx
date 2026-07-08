@@ -15,6 +15,7 @@ import Indicator from "@/app/ui/border-indicator";
 import Modes from "@/app/ui/body/modes";
 import TimerDisplay from "@/app/ui/body/timer";
 import Modal from "./ui/modal/modal";
+import { Tasks } from "./ui/tasks/task";
 
 export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -22,12 +23,13 @@ export default function Page() {
     const {
         play,
         stop,
-        timeLeft,
+        pause,
         settings,
         sessions,
-        duration,
+        timeLeft,
         timerStatus,
         selectedMode,
+        sessionDuration,
         handleSelectedMode,
         handleChangeSettings,
     } = useCountDown()
@@ -38,14 +40,14 @@ export default function Page() {
 
     return (
         <div className={cn(
-            "flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
+            "relative flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
             bgClasses[selectedMode]
         )}>
-            <main className="flex flex-1 w-full max-w-2xl flex-col items-center relative">
+            <main className="border border-red-600 flex flex-1 w-full max-w-2xl flex-col items-center relative">
                 <Header handleModalOpen={handleModalOpen} />
                 <Indicator
                     timeLeft={timeLeft}
-                    duration={duration}
+                    duration={sessionDuration}
                     sessions={sessions}
                     interval={settings.interval}
                     selectedMode={selectedMode}
@@ -67,7 +69,7 @@ export default function Page() {
                                 "text-long": selectedMode === 'long',
                             }
                         )}
-                        onClick={timerStatus === 'running' ? stop : play}
+                        onClick={timerStatus === 'running' ? pause : play}
                     >
                         <span className="text-2xl">
                             {timerStatus === 'running' ? 'PAUSE' : 'START'}
@@ -80,6 +82,7 @@ export default function Page() {
                     settingsProp={{ settings, handleChangeSettings }}
                     selectedMode={selectedMode}
                 />
+                <Tasks />
             </main>
         </div >
     );

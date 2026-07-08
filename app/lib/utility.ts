@@ -41,9 +41,11 @@ export const getUserSettings = (config: TimerSettings): TimerSettings => {
 // initialize reducer
 export const initializeReducerState = (duration: number): TimerState => {
     return {
-        timerStatus: "stopped",
-        timeLeft: duration,
         sessions: 0,
+        stamp: Date.now(),
+        timeLeft: duration,
+        timerStatus: "stopped",
+        sessionDuration: duration,
     }
 }
 

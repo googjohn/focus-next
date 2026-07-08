@@ -11,27 +11,42 @@ export function timerReducer(
     action: TimerActions
 ): TimerState {
     switch (action.type) {
+        case "START": {
+
+            return {
+                ...state,
+                timerStatus: "running",
+                stamp: Date.now()
+            }
+        }
+        case "PAUSE": {
+
+            return {
+                ...state,
+                timerStatus: "paused",
+                sessionDuration: state.timeLeft,
+            }
+        }
         case "SET_STATUS":
             return {
                 ...state,
                 timerStatus: action.payload.status
             }
-        case "FINISHED":
+        case "TICKING": {
+
+            const elapsedTime = Math.floor((Date.now() - state.stamp) / 1000)
+            const remainingTime = state.sessionDuration - elapsedTime;
+
             return {
                 ...state,
-                timerStatus: "finished",
-                timeLeft: 0,
+                timeLeft: Math.max(0, remainingTime),
             }
-        case "TICKING":
-            return {
-                ...state,
-                timeLeft: Math.max(0, state.timeLeft - 1),
-            }
+        }
         case "UPDATE_TIME": {
-            if (state.timeLeft === action.payload.duration) return state;
             return {
                 ...state,
-                timeLeft: action.payload.duration
+                sessionDuration: action.payload.duration,
+                timeLeft: action.payload.duration,
             }
         }
         case "UPDATE_SESSIONS": {
@@ -59,4 +74,4 @@ export const userSettingsReducer = (
         default:
             return state;
     }
-} 
+}

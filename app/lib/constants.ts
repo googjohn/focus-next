@@ -1,4 +1,4 @@
-import { SelectedMode, TimerSettings, TimerState } from "./definitions"
+import { SelectedMode, TimerSettings } from "./definitions"
 
 // background classes
 export const bgClasses = {
@@ -19,11 +19,4 @@ export const MODE_CONFIG: TimerSettings = {
     short: 5,
     long: 15,
     interval: 4,
-}
-
-// default timer state
-export const timerInitialState: TimerState = {
-    timerStatus: "stopped",
-    timeLeft: 1500,
-    sessions: 0,
 }

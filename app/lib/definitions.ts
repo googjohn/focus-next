@@ -11,8 +11,10 @@ export type TimerStatus = "paused" | "finished" | "running" | "stopped";
 // timer state:: used by countdown
 export interface TimerState {
     timerStatus: TimerStatus;
-    timeLeft: number;
     sessions: number;
+    timeLeft: number;
+    sessionDuration: number;
+    stamp: number; // in seconds stamp / 1000
 }
 
 // type for current mode selected
@@ -62,10 +64,11 @@ export type TimerProps = {
 
 /* timer types for reducer */
 export type TimerActions =
-    | { type: "SET_STATUS", payload: { status: TimerStatus } }
-    | { type: "FINISHED" }
-    | { type: "TICKING" }
-    | { type: "UPDATE_TIME", payload: { duration: number } }
+    | { type: "START" }
+    | { type: "PAUSE" }
+    | { type: "SET_STATUS", payload: { status: TimerStatus } } // stopped | start | paused | finished
+    | { type: "TICKING" } // updates timeleft
+    | { type: "UPDATE_TIME", payload: { duration: number } } // updates total duration
     | { type: "UPDATE_SESSIONS" }
 
 /* payload, modal local state, props reducer types */
