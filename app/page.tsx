@@ -43,7 +43,7 @@ export default function Page() {
             "relative flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
             bgClasses[selectedMode]
         )}>
-            <main className="border border-red-600 flex flex-1 w-full max-w-2xl flex-col items-center relative">
+            <main className="flex flex-1 w-full max-w-2xl flex-col items-center relative">
                 <Header handleModalOpen={handleModalOpen} />
                 <Indicator
                     timeLeft={timeLeft}

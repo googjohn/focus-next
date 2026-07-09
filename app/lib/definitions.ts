@@ -99,3 +99,9 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 // setTimeout and setInterval types
 export type IntervalRefType = ReturnType<typeof setInterval> | null
 export type TimeoutRefType = ReturnType<typeof setTimeout> | null
+
+export type Task = {
+    checked: boolean,
+    value: string,
+    id: number,
+}
