@@ -3,6 +3,7 @@ import {
     SetStateAction,
     PropsWithChildren,
     ButtonHTMLAttributes,
+    RefObject,
 } from "react";
 
 // type for timer status
@@ -104,4 +105,17 @@ export type Task = {
     checked: boolean,
     value: string,
     id: number,
+}
+
+export type TaskInputProps = {
+    inputRef: RefObject<HTMLInputElement | null>;
+    newTask: string;
+    handleInputChange: (e: ChangeEvent) => void;
+    handleAddTask: () => void;
+}
+
+export type TaskHandles = {
+    handleClear: () => void;
+    handleDelete: (id: number) => void;
+    handleCheckboxChange: (index: number) => void;
 }
