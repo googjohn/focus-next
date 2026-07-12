@@ -16,6 +16,7 @@ import Modes from "@/app/ui/body/modes";
 import TimerDisplay from "@/app/ui/body/timer";
 import Modal from "./ui/modal/modal";
 import { Tasks } from "./ui/tasks/task";
+import { Quotes } from "./ui/quotes/quotes";
 
 export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -37,6 +38,16 @@ export default function Page() {
     const handleModalOpen = () => {
         setIsModalOpen(!isModalOpen)
     }
+
+    /* 
+        ## future feature
+            # can add task with custom time
+            # automatically remove task after elapsed time - auto-switch provided
+            # notes that can be a pop-up or independent app
+                => if independent, sends note to a database? main app fetches from database for syncing
+
+    
+    */
 
     return (
         <div className={cn(
@@ -83,6 +94,7 @@ export default function Page() {
                     selectedMode={selectedMode}
                 />
                 <Tasks />
+                <Quotes mode={selectedMode} />
             </main>
         </div >
     );

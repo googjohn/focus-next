@@ -66,7 +66,7 @@ export const Tasks = () => {
     }
 
     return (
-        <div className="max-w-lg bg-white/40 rounded-xl w-full min-h-full mt-5 p-5 text-white">
+        <div className="max-w-lg bg-white/20 rounded-xl w-full min-h-full mt-5 p-5 text-white shadow-2xl">
             <div className="h-10 flex items-center justify-center relative w-full">
                 <h2 className="text-[clamp(1.3rem,2.5vw,1.5rem)]">To Do</h2>
             </div>

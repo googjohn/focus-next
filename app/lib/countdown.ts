@@ -22,7 +22,7 @@ export const useCountDown = () => {
     const [settings, setSettings] = useState(MODE_CONFIG);
     const [selectedMode, setSelectedMode] = useState<SelectedMode>('focus')
 
-    const derivedDuration = settings[selectedMode] * 1;
+    const derivedDuration = settings[selectedMode] * 60;
 
     const [timerState, dispatch] = useReducer(timerReducer, derivedDuration, initializeReducerState);
 

@@ -33,7 +33,9 @@ export default function RootLayout({
         >
             <body className={cn(
                 `min-h-full flex flex-col`
-            )}>{children}</body>
+            )}>
+                {children}
+            </body>
         </html>
     );
 }

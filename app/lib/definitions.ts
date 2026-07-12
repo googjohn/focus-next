@@ -119,3 +119,10 @@ export type TaskHandles = {
     handleDelete: (id: number) => void;
     handleCheckboxChange: (index: number) => void;
 }
+
+export type QuotesType = {
+    q: string;
+    a: string;
+    c: string;
+    h: string
+}
