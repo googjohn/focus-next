@@ -17,6 +17,7 @@ import TimerDisplay from "@/app/ui/body/timer";
 import Modal from "./ui/modal/modal";
 import { Tasks } from "./ui/tasks/task";
 import { Quotes } from "./ui/quotes/quotes";
+import { Notes } from "./ui/notes/notes";
 
 export default function Page() {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -51,10 +52,10 @@ export default function Page() {
 
     return (
         <div className={cn(
-            "relative flex flex-col flex-1 items-center justify-center sm:px-0 px-2.5 z-50",
+            "relative flex flex-col flex-1 items-center justify-start sm:px-0 px-2.5 z-50",
             bgClasses[selectedMode]
         )}>
-            <main className="flex flex-1 w-full max-w-2xl flex-col items-center relative">
+            <main className="flex  w-full max-w-3xl flex-col items-center relative">
                 <Header handleModalOpen={handleModalOpen} />
                 <Indicator
                     timeLeft={timeLeft}
@@ -93,8 +94,11 @@ export default function Page() {
                     settingsProp={{ settings, handleChangeSettings }}
                     selectedMode={selectedMode}
                 />
-                <Tasks />
                 <Quotes mode={selectedMode} />
+                <div className="w-full flex flex-col md:flex-row items-center md:items-stretch md:gap-2.5">
+                    <Tasks />
+                    <Notes />
+                </div>
             </main>
         </div >
     );

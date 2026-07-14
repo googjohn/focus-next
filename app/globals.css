@@ -4,6 +4,7 @@
   --focus:  #422d5e;
   --short: #2698ac;
   --long: #8a2d7a;
+  --h2: clamp(1.1rem, 2.5vw, 1.25rem);
   /* --background: var(--focus); */
   /* --background: #ffffff; */
   /* --foreground: #ededed; */
@@ -16,6 +17,7 @@
   --color-long: var(--long);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --text-h2: var(--h2);
 }
 
 

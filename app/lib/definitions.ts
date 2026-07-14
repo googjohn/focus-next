@@ -1,9 +1,9 @@
 import {
     Dispatch,
+    RefObject,
     SetStateAction,
     PropsWithChildren,
     ButtonHTMLAttributes,
-    RefObject,
 } from "react";
 
 // type for timer status
@@ -90,7 +90,7 @@ export interface ModalDispatch {
 /* events type */
 export type MouseEvent = React.MouseEvent<HTMLButtonElement>
 
-export type ChangeEvent = React.ChangeEvent<HTMLInputElement>
+export type ChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 
 export type SubmitEvent = React.SubmitEvent<HTMLFormElement>
 
@@ -101,28 +101,43 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement>
 export type IntervalRefType = ReturnType<typeof setInterval> | null
 export type TimeoutRefType = ReturnType<typeof setTimeout> | null
 
+/* tasks types */
 export type Task = {
     checked: boolean,
     value: string,
-    id: number,
-}
-
-export type TaskInputProps = {
-    inputRef: RefObject<HTMLInputElement | null>;
-    newTask: string;
-    handleInputChange: (e: ChangeEvent) => void;
-    handleAddTask: () => void;
+    id: string,
 }
 
 export type TaskHandles = {
     handleClear: () => void;
-    handleDelete: (id: number) => void;
-    handleCheckboxChange: (index: number) => void;
+    handleDelete: (id: string) => void;
+    handleCheckboxChange: (id: string) => void;
 }
 
+/* quotes types */
 export type QuotesType = {
     q: string;
     a: string;
     c: string;
     h: string
+}
+
+/* notes types */
+export type Note = {
+    value: string;
+    id: string;
+    height: number;
+}
+
+export type NoteHandles = {
+    handleClear: () => void;
+    handleDelete: (id: string) => void;
+}
+
+/*  */
+export type TaskNoteInputProps<T extends HTMLInputElement | HTMLTextAreaElement | null> = {
+    ref: RefObject<T | null>;
+    newInput: string;
+    handleChange: (e: ChangeEvent) => void;
+    handleAdd: () => void;
 }

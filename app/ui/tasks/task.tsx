@@ -7,22 +7,26 @@ import { TaskList } from "./tasksList";
 import { ChangeEvent, Task } from "@/app/lib/definitions";
 
 export const Tasks = () => {
-    const taskIdRef = useRef(0)
+    const taskIdRef = useRef(crypto.randomUUID())
     const inputRef = useRef<HTMLInputElement>(null)
     const [tasks, setTasks] = useState<Task[]>([])
     const [newTask, setNewTask] = useState('')
 
-    const handleCheckboxChange = (index: number) => {
-
+    const handleCheckboxChange = (id: string) => {
         setTasks(prev => {
             const newTasks = [...prev]
-            newTasks[index] = {
-                ...newTasks[index],
-                checked: !newTasks[index].checked
-            }
-            return newTasks
-        })
+            const existingIndex = newTasks.findIndex(task => task.id === id)
 
+            if (existingIndex !== -1) {
+                newTasks[existingIndex] = {
+                    ...newTasks[existingIndex],
+                    checked: !newTasks[existingIndex].checked
+                }
+                return newTasks
+            }
+
+            return prev
+        })
     }
 
     const handleInputChange = (e: ChangeEvent) => {
@@ -38,7 +42,7 @@ export const Tasks = () => {
             id: taskIdRef.current,
         }
 
-        taskIdRef.current++;
+        taskIdRef.current = crypto.randomUUID();
 
         setTasks(prev => [...prev, task]);
         setNewTask('')
@@ -48,41 +52,40 @@ export const Tasks = () => {
 
     const handleClear = () => {
         const allDone = tasks.every(task => task.checked)
+
         if (allDone) {
             const yes = prompt("Are you sure to clear all?")
             if (!yes) return;
-
-            setTasks([])
         } else {
             const yes = prompt("There are still some tasks to finish. Are you sure to clear all?")
             if (!yes) return;
-            setTasks([])
         }
+
+        setTasks([])
     }
 
-    const handleDelete = (id: number) => {
-        const newTasks = tasks.filter(task => task.id !== id)
-        setTasks(newTasks)
+    const handleDelete = (id: string) => {
+        setTasks(prev => prev.filter(task => task.id !== id))
     }
 
     return (
-        <div className="max-w-lg bg-white/20 rounded-xl w-full min-h-full mt-5 p-5 text-white shadow-2xl">
+        <div className="max-w-lg bg-white/20 rounded-xl w-full min-h-full mt-2.5 p-5 pt-2.5 text-white shadow-2xl">
             <div className="h-10 flex items-center justify-center relative w-full">
-                <h2 className="text-[clamp(1.3rem,2.5vw,1.5rem)]">To Do</h2>
+                <h2 className="text-h2">To Do</h2>
             </div>
-            <div className="container">
+            <div className="w-full mt-2.5">
                 <TaskInput
-                    inputRef={inputRef}
-                    newTask={newTask}
-                    handleAddTask={handleAddTask}
-                    handleInputChange={handleInputChange}
+                    ref={inputRef}
+                    newInput={newTask}
+                    handleAdd={handleAddTask}
+                    handleChange={handleInputChange}
                 />
                 <TaskList
                     tasks={tasks}
                     handles={{
                         handleClear,
                         handleDelete,
-                        handleCheckboxChange
+                        handleCheckboxChange,
                     }}
                 />
             </div>
