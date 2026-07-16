@@ -6,6 +6,7 @@ import { cn, updateTextareaHeight } from "@/app/lib/utility";
 import { NoteInput } from "./notesInput";
 import { NotesList } from "./noteList";
 import { ChangeEvent, Note } from "@/app/lib/definitions";
+import { useIdb } from "@/app/lib/indexedDB";
 
 export const Notes = () => {
     const noteIdRef = useRef('');
@@ -15,6 +16,24 @@ export const Notes = () => {
 
     const [notes, setNotes] = useState<Note[]>([]);
     const [newNote, setNewNote] = useState('')
+    const { openDB, getRecords } = useIdb()
+    // initialize notes with saved notes from indexedDB
+    useEffect(() => {
+        const init = async () => {
+            const db = await openDB("focus-next", 1, "notes")
+            const records = await getRecords(db, null, "notes")
+            if (records.length < 0) return;
+
+            records.forEach(record => {
+                const noteCopy = {
+                    id: record.value.id,
+                    value: record.value.value,
+                }
+                setNotes(prev => [...prev, noteCopy])
+            })
+        }
+        init()
+    }, [])
 
     useEffect(() => {
         if (!noteIdRef.current) return;

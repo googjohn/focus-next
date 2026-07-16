@@ -55,22 +55,7 @@ export const NewNoteList = ({ notesRef, list, handleDelete }: NoteProps) => {
         id: list.id,
     })
 
-    const { openDB, addRecord, getRecords } = useIdb();
-
-    useEffect(() => {
-        const init = async () => {
-            const db = await openDB("focus-next", 1, "notes")
-            const records = await getRecords(db, null, "notes")
-            if (records.length < 0) return;
-            // records.forEach(record => {
-            //     if(!notesRef?.current.has(record.id)) {
-            //         notesRef?.current.set()
-            //     }
-            // })
-            console.log(records)
-        }
-        init()
-    }, [])
+    const { openDB, addRecord } = useIdb();
 
     useEffect(() => {
         const rundb = async (state: Note) => {

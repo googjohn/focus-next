@@ -17,7 +17,12 @@ export const useIdb = () => {
     const addRecord = (db, storeName, note) => {
         const transaction = db.transaction(storeName, "readwrite");
         const store = transaction.objectStore(storeName);
-        const request = store.put({ ...note })
+        const rawId = String(note.id)
+        const rawValue = String(note.value)
+        const request = store.put({
+            id: rawId,
+            value: rawValue
+        })
 
         return new Promise((resolve, reject) => {
             request.onsuccess = () => resolve(request.result)

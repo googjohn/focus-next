@@ -55,7 +55,6 @@ export const saveSettings = (settings: TimerSettings) => {
         const newUserSettings = JSON.stringify(settings)
         if (typeof window !== undefined) {
             localStorage.setItem("userSettings", newUserSettings)
-            console.log("New user settings saved.")
         }
         return;
     } catch (error) {
