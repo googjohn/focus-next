@@ -14,7 +14,7 @@ export const NoteInput = ({
     handleChange,
 }: TaskNoteInputProps<HTMLTextAreaElement>) => {
     const [isFocused, setIsFocused] = useState(false)
-
+    const handleFocus = (isFocused: boolean) => setIsFocused(isFocused)
     return (
         <NotesOrTaskContainer>
             <textarea
@@ -23,8 +23,8 @@ export const NoteInput = ({
                 rows={1}
                 value={newInput}
                 onChange={handleChange}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
+                onFocus={() => handleFocus(true)}
+                onBlur={() => handleFocus(false)}
                 placeholder="Add notes..."
                 className={cn(
                     "w-full  px-2.5 py-2 outline-none rounded-l-md resize-none focus:bg-black/10 bg-black/5",

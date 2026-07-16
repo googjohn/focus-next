@@ -14,7 +14,7 @@ export const TaskInput = ({
     handleChange,
 }: TaskNoteInputProps<HTMLInputElement>) => {
     const [isFocused, setIsFocused] = useState(false)
-
+    const handleFocus = (isFocused: boolean) => setIsFocused(isFocused)
     return (
         <NotesOrTaskContainer>
             <input
@@ -24,8 +24,8 @@ export const TaskInput = ({
                 placeholder="Add new task..."
                 value={newInput}
                 onChange={handleChange}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
+                onFocus={() => handleFocus(true)}
+                onBlur={() => handleFocus(false)}
                 className={cn(
                     'w-full block h-10 px-2.5 bg-black/5 rounded-l-md outline-none focus:bg-black/10',
                 )}

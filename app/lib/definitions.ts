@@ -126,7 +126,6 @@ export type QuotesType = {
 export type Note = {
     value: string;
     id: string;
-    height: number;
 }
 
 export type NoteHandles = {

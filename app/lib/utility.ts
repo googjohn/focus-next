@@ -62,3 +62,9 @@ export const saveSettings = (settings: TimerSettings) => {
         console.error((error))
     }
 }
+
+// update textarea height
+export const updateTextareaHeight = (textarea: HTMLTextAreaElement) => {
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+}

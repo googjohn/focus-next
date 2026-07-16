@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "@/app/lib/utility";
+import { cn, updateTextareaHeight } from "@/app/lib/utility";
 import { NoteInput } from "./notesInput";
 import { NotesList } from "./noteList";
 import { ChangeEvent, Note } from "@/app/lib/definitions";
@@ -18,16 +18,13 @@ export const Notes = () => {
 
     useEffect(() => {
         if (!noteIdRef.current) return;
-        console.log(notesRef.current)
         const textarea = notesRef.current.get(noteIdRef.current)
         if (textarea) {
             textarea?.focus()
-            textarea.style.height = "auto"
-            textarea.style.height = `${textarea.scrollHeight}px`
+            updateTextareaHeight(textarea)
         }
         if (textareaRef.current) {
-            textareaRef.current.style.height = "auto"
-            textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+            updateTextareaHeight(textareaRef.current)
         }
         noteIdRef.current = '';
     }, [notes])
@@ -40,7 +37,6 @@ export const Notes = () => {
         const note = {
             id: noteIdRef.current,
             value: newNote,
-            height: notesRef.current.get(noteIdRef.current)?.scrollHeight ?? 0,
         }
 
         setNotes(prev => [...prev, note]);
@@ -54,15 +50,12 @@ export const Notes = () => {
         })
     }
 
-    const updateTextareaHeight = (textarea: HTMLTextAreaElement) => {
-        textarea.style.height = "auto";
-        textarea.style.height = `${textarea.scrollHeight}px`;
-    }
-
     const handleTextareaChange = (e: ChangeEvent) => {
         const { value } = e.currentTarget
         setNewNote(value)
-        updateTextareaHeight(e.currentTarget as HTMLTextAreaElement)
+        if (e.currentTarget instanceof HTMLTextAreaElement) {
+            updateTextareaHeight(e.currentTarget)
+        }
     }
 
     const handleDelete = (id: string) => {
@@ -70,7 +63,7 @@ export const Notes = () => {
     }
 
     const handleClear = () => {
-        const yes = prompt("Are you sure to clear all?")
+        const yes = confirm("Are you sure to clear all?")
         if (!yes) return;
 
         setNotes([])

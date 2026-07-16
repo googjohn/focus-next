@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-import { cn } from "../lib/utility"
 import { IoClose } from "react-icons/io5"
 import { FaSquare } from "react-icons/fa6"
+import { cn, updateTextareaHeight } from "../lib/utility"
 import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline"
 import { ChangeEvent, Note, Task, TaskHandles } from "../lib/definitions"
+import { useIdb } from "../lib/indexedDB"
 
 type HeadingList = {
     title: string,
@@ -52,13 +53,36 @@ export const NewNoteList = ({ notesRef, list, handleDelete }: NoteProps) => {
     const [localState, setLocalState] = useState<Note>({
         value: list.value,
         id: list.id,
-        height: list.height
     })
 
-    const updateTextareaHeight = (textarea: HTMLTextAreaElement) => {
-        textarea.style.height = "auto";
-        textarea.style.height = `${textarea.scrollHeight}px`;
-    }
+    const { openDB, addRecord, getRecords } = useIdb();
+
+    useEffect(() => {
+        const init = async () => {
+            const db = await openDB("focus-next", 1, "notes")
+            const records = await getRecords(db, null, "notes")
+            if (records.length < 0) return;
+            // records.forEach(record => {
+            //     if(!notesRef?.current.has(record.id)) {
+            //         notesRef?.current.set()
+            //     }
+            // })
+            console.log(records)
+        }
+        init()
+    }, [])
+
+    useEffect(() => {
+        const rundb = async (state: Note) => {
+            const db = await openDB("focus-next", 1, "notes");
+            addRecord(db, 'notes', state)
+        }
+        const timeout = setTimeout(() => {
+            rundb(localState)
+        }, 1500)
+
+        return () => clearTimeout(timeout)
+    }, [localState])
 
     const handleChangeUpdate = (e: ChangeEvent) => {
         const { value } = e.currentTarget;

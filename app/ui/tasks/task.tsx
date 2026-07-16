@@ -54,10 +54,10 @@ export const Tasks = () => {
         const allDone = tasks.every(task => task.checked)
 
         if (allDone) {
-            const yes = prompt("Are you sure to clear all?")
+            const yes = confirm("Are you sure to clear all?")
             if (!yes) return;
         } else {
-            const yes = prompt("There are still some tasks to finish. Are you sure to clear all?")
+            const yes = confirm("There are still some tasks to finish. Are you sure to clear all?")
             if (!yes) return;
         }
 
