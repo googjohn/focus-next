@@ -140,3 +140,9 @@ export type TaskNoteInputProps<T extends HTMLInputElement | HTMLTextAreaElement 
     handleChange: (e: ChangeEvent) => void;
     handleAdd: () => void;
 }
+
+/* indexedDB types */
+export type IndexedDBRecord<T> = {
+    key: IDBValidKey;
+    value: T;
+}

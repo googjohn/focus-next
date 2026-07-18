@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn, updateTextareaHeight } from "@/app/lib/utility";
 import { NoteInput } from "./notesInput";
 import { NotesList } from "./noteList";
-import { ChangeEvent, Note } from "@/app/lib/definitions";
+import { ChangeEvent, IndexedDBRecord, Note } from "@/app/lib/definitions";
 import { useIdb } from "@/app/lib/indexedDB";
 
 export const Notes = () => {
@@ -21,16 +21,15 @@ export const Notes = () => {
     useEffect(() => {
         const init = async () => {
             const db = await openDB("focus-next", 1, "notes")
-            const records = await getRecords(db, null, "notes")
-            if (records.length < 0) return;
+            const records = await getRecords(db, null, "notes") as IndexedDBRecord<Note>[]
+            if (records.length === 0) return;
 
-            records.forEach(record => {
-                const noteCopy = {
-                    id: record.value.id,
-                    value: record.value.value,
-                }
-                setNotes(prev => [...prev, noteCopy])
-            })
+            const loadedNotes: Note[] = records.map((record) => ({
+                id: record.value.id,
+                value: record.value.value,
+            }))
+
+            setNotes(prev => [...prev, ...loadedNotes])
         }
         init()
     }, [])
