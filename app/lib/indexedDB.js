@@ -30,10 +30,10 @@ export const useIdb = () => {
         })
     }
 
-    const getRecords = (db, id, storeName) => {
+    const getRecords = (db, id, storeName, no = 3) => {
         const transaction = db.transaction(storeName, "readonly");
         const store = transaction.objectStore(storeName);
-        const request = store.getAllRecords({ count: 3 })
+        const request = store.getAllRecords({ count: no })
 
         return new Promise((resolve, reject) => {
             request.onsuccess = () => resolve(request.result)

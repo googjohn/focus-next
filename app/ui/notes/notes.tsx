@@ -82,10 +82,17 @@ export const Notes = () => {
     }
 
     const handleClear = () => {
-        const yes = confirm("Are you sure to clear all?")
+        const yes = confirm("Are you sure to clear all? This deletes all notes from database.")
         if (!yes) return;
 
         setNotes([])
+        const deleteFromdb = async () => {
+            const db = await openDB("focus-next", 1, "notes")
+            const transaction = db.transaction("notes", "readwrite");
+            const store = transaction.objectStore("notes");
+            store.clear()
+        }
+        deleteFromdb()
     }
 
     return (

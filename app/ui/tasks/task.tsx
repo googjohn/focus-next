@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { TaskInput } from "./tasksInput";
 import { TaskList } from "./tasksList";
 import { ChangeEvent, Task } from "@/app/lib/definitions";
+import { useIdb } from "@/app/lib/indexedDB";
 
+/* ## TODO ## */
+/* 
+    add synchronisation with timer to automatically remove task after timer ends or ready for the next timer
+    if enabled needs a button or switch for switching mode to auto
+*/
 export const Tasks = () => {
     const taskIdRef = useRef(crypto.randomUUID())
     const inputRef = useRef<HTMLInputElement>(null)
@@ -92,8 +98,3 @@ export const Tasks = () => {
         </div>
     )
 }
-
-/* 
-    can add synchronisation with timer to automatically remove task after timer ends or ready for the next timer
-    if enabled needs a button or switch for switching mode to auto
-*/
